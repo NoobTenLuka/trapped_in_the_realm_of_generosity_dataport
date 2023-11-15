@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
 
     sqlx::migrate!().run(&pool).await.unwrap_or_else(|err| {
         error!("Failed to run database migrations: {err}");
-        std::process::exit(1);
+        process::exit(1);
     });
 
     let address = std::env::var("DATAPORT_ADDRESS").unwrap_or("127.0.0.1".to_string());
