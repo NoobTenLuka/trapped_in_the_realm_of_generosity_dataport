@@ -28,6 +28,18 @@ CREATE TYPE location AS
     z_coordinate DECIMAL(7, 3)
 );
 
+CREATE TYPE instance_type AS ENUM ('Dungeon', 'Trial', 'Raid');
+
+CREATE TABLE instance
+(
+    id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name         TEXT          NOT NULL,
+    description  TEXT          NOT NULL,
+    type         instance_type NOT NULL,
+    player_count SMALLINT      NOT NULL,
+    min_level    SMALLINT      NOT NULL
+);
+
 CREATE TABLE character
 (
     id                uuid PRIMARY KEY  DEFAULT gen_random_uuid(),
@@ -117,7 +129,7 @@ CREATE TABLE shop
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     seller      uuid REFERENCES npc NOT NULL UNIQUE,
     description TEXT                NOT NULL,
-    type        uuid REFERENCES shop_type
+    type        SMALLINT REFERENCES shop_type
 );
 
 CREATE TABLE shop_sells_item
@@ -163,13 +175,13 @@ CREATE TABLE quest
 (
     id                      uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     level_requirement       SMALLINT   NOT NULL,
-    class_requirement       uuid REFERENCES class,
+    class_requirement       SMALLINT REFERENCES class,
     class_type_requirement  class_type,
     requirement_disjunction BOOLEAN    NOT NULL,
     type                    quest_type NOT NULL,
     digidollar_reward       INT,
     experience_reward       INT,
-    unlocks_class           uuid REFERENCES class
+    unlocks_class           SMALLINT REFERENCES class
 );
 
 CREATE TABLE quest_requirement
@@ -198,18 +210,6 @@ CREATE TABLE quest_item_reward
     optional BOOLEAN NOT NULL,
     amount   SMALLINT,
     PRIMARY KEY (quest_id, item_id)
-);
-
-CREATE TYPE instance_type AS ENUM ('Dungeon', 'Trial', 'Raid');
-
-CREATE TABLE instance
-(
-    id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name         TEXT          NOT NULL,
-    description  TEXT          NOT NULL,
-    type         instance_type NOT NULL,
-    player_count SMALLINT      NOT NULL,
-    min_level    SMALLINT      NOT NULL
 );
 
 CREATE TYPE instance_state AS ENUM ('Unlocked', 'Completed');
