@@ -45,7 +45,7 @@ CREATE TABLE character
     id                uuid PRIMARY KEY  DEFAULT gen_random_uuid(),
     name              TEXT     NOT NULL,
     digidollar        INT      NOT NULL DEFAULT 0,
-    game_server_id    SMALLINT REFERENCES game_server,
+    game_server_id    SMALLINT NOT NULL REFERENCES game_server,
     area_id           SMALLINT NOT NULL,
     location          location NOT NULL,
     instance_id       uuid REFERENCES instance,
@@ -80,6 +80,7 @@ CREATE TABLE character_class
 CREATE TABLE item
 (
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name        TEXT    NOT NULL,
     description TEXT    NOT NULL,
     sellable    BOOLEAN NOT NULL,
     is_key_item BOOLEAN NOT NULL
@@ -111,7 +112,7 @@ CREATE TABLE item_stat
 CREATE TABLE npc
 (
     id                    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    area_id               SMALLINT REFERENCES area,
+    area_id               SMALLINT NOT NULL REFERENCES area,
     location              location NOT NULL,
     name                  TEXT     NOT NULL,
     default_conversation  TEXT     NOT NULL,
@@ -127,18 +128,18 @@ CREATE TABLE shop_type
 CREATE TABLE shop
 (
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    seller      uuid REFERENCES npc NOT NULL UNIQUE,
-    description TEXT                NOT NULL,
-    type        SMALLINT REFERENCES shop_type
+    seller      uuid REFERENCES npc           NOT NULL UNIQUE,
+    description TEXT                          NOT NULL,
+    type        SMALLINT REFERENCES shop_type NOT NULL
 );
 
 CREATE TABLE shop_sells_item
 (
     id            SMALLSERIAL PRIMARY KEY,
-    shop_id       uuid REFERENCES shop,
-    item_id       uuid REFERENCES item,
+    shop_id       uuid REFERENCES shop NOT NULL,
+    item_id       uuid REFERENCES item NOT NULL,
     price         INT,
-    default_order SMALLINT NOT NULL
+    default_order SMALLINT             NOT NULL
 );
 
 CREATE TABLE item_as_price
@@ -227,13 +228,13 @@ CREATE TYPE objective_item_type AS ENUM ('GiveItem', 'RemoveItem');
 CREATE TABLE quest_objective
 (
     id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    description    TEXT                NOT NULL,
+    description    TEXT     NOT NULL,
     dialogue       TEXT,
     amount         SMALLINT,
-    order_in_quest SMALLINT            NOT NULL,
+    order_in_quest SMALLINT NOT NULL,
     npc            uuid REFERENCES npc,
     item           uuid REFERENCES item,
-    item_type      objective_item_type NOT NULL,
+    item_type      objective_item_type,
     enemy          uuid REFERENCES enemy,
     instance       uuid REFERENCES instance
 );
