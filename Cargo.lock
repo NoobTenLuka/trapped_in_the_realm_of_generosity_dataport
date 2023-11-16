@@ -562,6 +562,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0f32d04922c60427da6f9fef14d042d9edddef64cb9d4ce0d64d0685fbeb1fd3"
 dependencies = [
  "powerfmt",
+ "serde",
 ]
 
 [[package]]
@@ -2194,6 +2195,7 @@ dependencies = [
  "log",
  "rust_decimal",
  "rust_decimal_macros",
+ "serde",
  "sqlx",
  "time",
  "uuid",
@@ -2254,6 +2256,9 @@ name = "uuid"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88ad59a7560b41a70d191093a945f0b87bc1deeda46fb237479708a1d6b6cdfc"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "vcpkg"

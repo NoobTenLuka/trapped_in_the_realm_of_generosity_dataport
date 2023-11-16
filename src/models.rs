@@ -1,29 +1,30 @@
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use uuid::Uuid;
 
 #[derive(sqlx::FromRow)]
 pub struct Datacenter {
-    id: i16,
-    name: String,
-    region: String,
+    pub id: i16,
+    pub name: String,
+    pub region: String,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct GameServer {
-    id: i16,
-    name: String,
-    datacenter_id: i16,
+    pub id: i16,
+    pub name: String,
+    pub datacenter_id: i16,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct Area {
-    id: i16,
-    name: String,
-    description: String,
+    pub id: i16,
+    pub name: String,
+    pub description: String,
 }
 
-#[derive(sqlx::Type)]
+#[derive(sqlx::Type, Serialize, Deserialize, Copy, Clone)]
 #[sqlx(type_name = "location")]
 pub struct Location {
     /* As per database definition, only decimal numbers between
@@ -32,9 +33,9 @@ pub struct Location {
     * Max Coordinate = 9999.999
     * will be accepted into the database
     */
-    x_coordinate: Decimal,
-    y_coordinate: Decimal,
-    z_coordinate: Decimal,
+    pub x_coordinate: Decimal,
+    pub y_coordinate: Decimal,
+    pub z_coordinate: Decimal,
 }
 
 #[derive(sqlx::Type)]
@@ -43,28 +44,28 @@ pub enum InstanceType { Dungeon, Trial, Raid }
 
 #[derive(sqlx::FromRow)]
 pub struct Instance {
-    id: Uuid,
-    name: String,
-    description: String,
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
     #[sqlx(rename = "type")]
-    instance_type: InstanceType,
-    player_count: i16,
-    min_level: i16,
+    pub instance_type: InstanceType,
+    pub player_count: i16,
+    pub min_level: i16,
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, Serialize)]
 pub struct Character {
-    id: Uuid,
-    name: String,
-    digidollar: i32,
-    game_server_id: i16,
-    area_id: i16,
-    location: Location,
-    instance_id: Option<Uuid>,
-    instance_location: Option<Location>,
-    keycloak_user_id: Uuid,
-    creation_date: OffsetDateTime,
-    playtime: i64,
+    pub id: Uuid,
+    pub name: String,
+    pub digidollar: i32,
+    pub game_server_id: i16,
+    pub area_id: i16,
+    pub location: Location,
+    pub instance_id: Option<Uuid>,
+    pub instance_location: Option<Location>,
+    pub keycloak_user_id: Uuid,
+    pub creation_date: OffsetDateTime,
+    pub playtime: i64,
 }
 
 #[derive(sqlx::Type)]
@@ -73,106 +74,106 @@ pub enum ClassType { Melee, Ranged, Caster, Tank, Healer }
 
 #[derive(sqlx::FromRow)]
 pub struct Class {
-    id: i16,
-    name: String,
-    description: String,
+    pub id: i16,
+    pub name: String,
+    pub description: String,
     #[sqlx(rename = "type")]
-    class_type: ClassType,
+    pub class_type: ClassType,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct CharacterClass {
-    character_id: Uuid,
-    class_id: i16,
-    level: i16,
-    experience: i32,
+    pub character_id: Uuid,
+    pub class_id: i16,
+    pub level: i16,
+    pub experience: i32,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct Item {
-    id: Uuid,
-    name: String,
-    description: String,
-    sellable: bool,
-    is_key_item: bool,
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
+    pub sellable: bool,
+    pub is_key_item: bool,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct InventoryItem {
-    character_id: Uuid,
-    item_id: Uuid,
-    amount: i16,
-    slot: i16,
+    pub character_id: Uuid,
+    pub item_id: Uuid,
+    pub amount: i16,
+    pub slot: i16,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct Stat {
-    id: i16,
-    name: String,
+    pub id: i16,
+    pub name: String,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct ItemStat {
-    item_id: Uuid,
-    stat_id: i16,
-    value: i32,
+    pub item_id: Uuid,
+    pub stat_id: i16,
+    pub value: i32,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct NPC {
-    id: Uuid,
-    area_id: i16,
-    location: Location,
-    name: String,
-    default_conversation: String,
-    visible_without_quest: bool,
+    pub id: Uuid,
+    pub area_id: i16,
+    pub location: Location,
+    pub name: String,
+    pub default_conversation: String,
+    pub visible_without_quest: bool,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct ShopType {
-    id: i16,
-    name: String,
+    pub id: i16,
+    pub name: String,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct Shop {
-    id: Uuid,
-    seller: Uuid,
-    description: String,
+    pub id: Uuid,
+    pub seller: Uuid,
+    pub description: String,
     #[sqlx(rename = "type")]
-    shop_type: i16,
+    pub shop_type: i16,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct ShopSellsItem {
-    id: i16,
-    shop_id: Uuid,
-    item_id: Uuid,
-    price: Option<i32>,
-    default_order: i16,
+    pub id: i16,
+    pub shop_id: Uuid,
+    pub item_id: Uuid,
+    pub price: Option<i32>,
+    pub default_order: i16,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct ItemAsPrice {
-    shop_sells_item_id: i16,
-    item_id: Uuid,
-    amount: i16,
+    pub shop_sells_item_id: i16,
+    pub item_id: Uuid,
+    pub amount: i16,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct Enemy {
-    id: Uuid,
-    name: String,
-    description: String,
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct EnemyDrop {
-    enemy_id: Uuid,
-    item_id: Uuid,
-    min_roll: i16,
-    min: i16,
-    max: i16,
+    pub enemy_id: Uuid,
+    pub item_id: Uuid,
+    pub min_roll: i16,
+    pub min: i16,
+    pub max: i16,
 }
 
 #[derive(sqlx::Type)]
@@ -181,22 +182,22 @@ pub enum QuestType { Normal, Unlocking, MainStory }
 
 #[derive(sqlx::FromRow)]
 pub struct Quest {
-    id: Uuid,
-    level_requirement: i16,
-    class_requirement: Option<i16>,
-    class_type_requirement: ClassType,
-    requirement_disjunction: bool,
+    pub id: Uuid,
+    pub level_requirement: i16,
+    pub class_requirement: Option<i16>,
+    pub class_type_requirement: ClassType,
+    pub requirement_disjunction: bool,
     #[sqlx(rename = "type")]
-    quest_type: QuestType,
-    digidollar_reward: Option<i32>,
-    experience_reward: Option<i32>,
-    unlocks_class: Option<i16>,
+    pub quest_type: QuestType,
+    pub digidollar_reward: Option<i32>,
+    pub experience_reward: Option<i32>,
+    pub unlocks_class: Option<i16>,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct QuestRequirement {
-    requirement: Uuid,
-    unlocks: Uuid,
+    pub requirement: Uuid,
+    pub unlocks: Uuid,
 }
 
 #[derive(sqlx::Type)]
@@ -205,19 +206,19 @@ pub enum QuestState { Unlocked, Accepted, Cleared }
 
 #[derive(sqlx::FromRow)]
 pub struct QuestCharacterRelation {
-    character_id: Uuid,
-    quest_id: Uuid,
-    progression: i16,
-    sub_progression: Option<i16>,
-    state: QuestState,
+    pub character_id: Uuid,
+    pub quest_id: Uuid,
+    pub progression: i16,
+    pub sub_progression: Option<i16>,
+    pub state: QuestState,
 }
 
 #[derive(sqlx::FromRow)]
 pub struct QuestItemReward {
-    quest_id: Uuid,
-    item_id: Uuid,
-    optional: bool,
-    amount: i16,
+    pub quest_id: Uuid,
+    pub item_id: Uuid,
+    pub optional: bool,
+    pub amount: i16,
 }
 
 #[derive(sqlx::Type)]
@@ -226,9 +227,9 @@ pub enum InstanceState { Unlocked, Cleared }
 
 #[derive(sqlx::FromRow)]
 pub struct CharacterInstanceRelation {
-    character_id: Uuid,
-    instance_id: Uuid,
-    state: InstanceState,
+    pub character_id: Uuid,
+    pub instance_id: Uuid,
+    pub state: InstanceState,
 }
 
 #[derive(sqlx::Type)]
@@ -237,14 +238,14 @@ pub enum ObjectiveItemType { GiveItem, RemoveItem }
 
 #[derive(sqlx::FromRow)]
 pub struct QuestObjective {
-    id: Uuid,
-    description: String,
-    dialogue: Option<String>,
-    amount: Option<i16>,
-    order_in_quest: i16,
-    npc: Option<Uuid>,
-    item: Option<Uuid>,
-    item_type: Option<ObjectiveItemType>,
-    enemy: Option<Enemy>,
-    instance: Option<Instance>,
+    pub id: Uuid,
+    pub description: String,
+    pub dialogue: Option<String>,
+    pub amount: Option<i16>,
+    pub order_in_quest: i16,
+    pub npc: Option<Uuid>,
+    pub item: Option<Uuid>,
+    pub item_type: Option<ObjectiveItemType>,
+    pub enemy: Option<Enemy>,
+    pub instance: Option<Instance>,
 }

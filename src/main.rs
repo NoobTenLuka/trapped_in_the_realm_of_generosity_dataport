@@ -1,7 +1,7 @@
 use std::process;
 
 use actix_cors::Cors;
-use actix_web::{App, get, HttpResponse, HttpServer, Responder, web};
+use actix_web::{App, HttpServer, Responder, web};
 use actix_web::http::header;
 use actix_web::middleware::Logger;
 use dotenv::dotenv;
@@ -9,15 +9,13 @@ use log::{error, info};
 use sqlx::PgPool;
 use sqlx::postgres::PgPoolOptions;
 
+use crate::v1_handlers::v1_handler_config;
+
 mod models;
+mod v1_handlers;
 
 pub struct AppState {
     db: PgPool,
-}
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
 }
 
 #[actix_web::main]
@@ -53,14 +51,9 @@ async fn main() -> std::io::Result<()> {
         process::exit(1);
     });
 
-    let address = std::env::var("DATAPORT_ADDRESS").unwrap_or("127.0.0.1".to_string());
+    let address = std::env::var("DATAPORT_ADDRESS").unwrap_or("127.0.0.1:8080".to_string());
 
-    let port = std::env::var("DATAPORT_PORT").map(|val| {
-        val.parse::<u16>().unwrap_or_else(|_| {
-            error!("DATAPORT_PORT must be a number");
-            process::exit(1);
-        })
-    }).unwrap_or(8080_u16);
+    info!("Dataport is listening on http://{address}");
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -74,11 +67,11 @@ async fn main() -> std::io::Result<()> {
             .supports_credentials();
         App::new()
             .app_data(web::Data::new(AppState { db: pool.clone() }))
-            .service(hello)
+            .configure(v1_handler_config)
             .wrap(cors)
             .wrap(Logger::default())
     })
-        .bind((address, port))?
+        .bind(address)?
         .run()
         .await
 }

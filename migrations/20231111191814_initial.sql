@@ -42,18 +42,18 @@ CREATE TABLE instance
 
 CREATE TABLE character
 (
-    id                uuid PRIMARY KEY  DEFAULT gen_random_uuid(),
-    name              TEXT     NOT NULL,
-    digidollar        INT      NOT NULL DEFAULT 0,
-    game_server_id    SMALLINT NOT NULL REFERENCES game_server,
-    area_id           SMALLINT NOT NULL,
-    location          location NOT NULL,
+    id                uuid PRIMARY KEY     DEFAULT gen_random_uuid(),
+    name              TEXT        NOT NULL,
+    digidollar        INT         NOT NULL DEFAULT 0,
+    game_server_id    SMALLINT    NOT NULL REFERENCES game_server,
+    area_id           SMALLINT    NOT NULL REFERENCES area,
+    location          location    NOT NULL,
     instance_id       uuid REFERENCES instance,
-    instance_location location          DEFAULT NULL,
-    keycloak_user_id  uuid     NOT NULL,
-    creation_date     timestamptz       DEFAULT now(),
+    instance_location location             DEFAULT NULL,
+    keycloak_user_id  uuid        NOT NULL,
+    creation_date     timestamptz NOT NULL DEFAULT now(),
     -- Playtime in ms
-    playtime          BIGINT   NOT NULL DEFAULT 0
+    playtime          BIGINT      NOT NULL DEFAULT 0
 );
 
 CREATE INDEX character_keycloak_uid ON character (keycloak_user_id);
