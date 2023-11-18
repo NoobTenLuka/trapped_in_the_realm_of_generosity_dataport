@@ -1,0 +1,18 @@
+### Registering a game_server
+POST {{host}}/v1/datacenters/1/game_servers
+Content-Type: application/json
+
+{
+  "name": "Test Server 1"
+}
+
+### Registering a datacenter
+POST {{host}}/v1/datacenters
+Content-Type: application/json
+
+{
+  "name": "Local Datacenter",
+  "region": "dev"
+}
+
+###

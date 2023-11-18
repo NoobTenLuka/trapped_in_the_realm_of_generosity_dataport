@@ -1,0 +1,23 @@
+### Create a new character
+POST {{host}}/v1/characters
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "game_server_id": 1,
+  "area_id": 1,
+  "location": {
+    "x_coordinate": 0.0,
+    "y_coordinate": 0.0,
+    "z_coordinate": 0.0
+  },
+  "keycloak_user_id": "9d1f00dc-8dcc-4708-b4d3-c18345e39f14"
+}
+
+### Get all characters
+GET {{host}}/v1/characters
+Accept: application/json
+
+### Get specific character
+GET {{host}}/v1/characters/id
+Accept: application/json
